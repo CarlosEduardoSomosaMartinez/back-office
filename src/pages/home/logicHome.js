@@ -27,9 +27,9 @@ class OperationBasic{
 
     editItem = async(row,token)=>{
         try{
-            console.log(row)
+            
             const result = await AuthClient.updateElement(this.table,row,token)
-            console.log(result)
+            return result
        }catch(err){
            console.log(err)
        }

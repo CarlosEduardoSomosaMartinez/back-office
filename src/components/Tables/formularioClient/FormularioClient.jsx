@@ -1,5 +1,5 @@
 import { Box, TextField ,Button, Typography} from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyledBox } from "./FormularioClient.Styled";
 import { useSelector } from "react-redux";
 import { useFetch } from "../../../hooks/useFetch";
@@ -8,7 +8,6 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 const FormularioClient = ({onClose,setAction,action,row,callback})=>{
     const [confirmForm,setConfirmForm]= useState(false)
     const [response,setResponse] = useState(row||{});
-
     const token = useSelector((state)=>state.auth.token)
 
     const {data,loading,error} = useFetch(
@@ -16,28 +15,26 @@ const FormularioClient = ({onClose,setAction,action,row,callback})=>{
     )
 
     const handleSubmit = (e) =>{
-        try{
-            e.preventDefault();
-            if(action==="update"){
-                callback(response,token);
-            }else{
-                setConfirmForm(true)
-            }
-            
+        e.preventDefault()
+        
+        try{  
+            setConfirmForm(true)
         }catch(err){
-            console.log(error)
-            console.log(err)
-        }finally{
-        
         }
-
-        
     }
 
     const handleChange = (e)=>{  
         const {name,value} = e.target;
         setResponse((prev)=>({...prev,[name]:value}));
     }
+
+    const handleClose=()=>{
+        setAction("");
+        onClose()
+        window.location.reload()
+        
+    }
+
 
 
     return(
@@ -55,6 +52,7 @@ const FormularioClient = ({onClose,setAction,action,row,callback})=>{
                 </Button>
             </StyledBox>):(<Box sx={{display:'flex',flexDirection:'column',alignItems:'center',margin:'20px',marginTop:"0px"}}><Typography sx={{textAlign:'center',margin:'20px'}}>{action==='update'?'se Actualizo con exito!!!':'se Registro con exito!!!'}</Typography>
                                 <CheckCircleOutlineIcon sx={{textAlign:'center',margin:'align',fontSize:'40px'}}/>
+                                <Button onClick={handleClose}>Okay</Button>
                             </Box>)}
         </>
     )
