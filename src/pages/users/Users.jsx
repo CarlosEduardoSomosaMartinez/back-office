@@ -1,20 +1,20 @@
 import React, { useEffect, useState, useCallback } from "react";
 import GenericTable from "../../components/Tables/GenericTable";
-import OperationBasic from "./logicHome.js";
+import OperationBasic from "../home/logicHome.js";
 import { useSelector } from "react-redux";
 import { useFetch } from "../../hooks/useFetch";
 import ActionButton from "../../components/Tables/ActionButton";
-import { useModal } from "../../hooks/useModal";
+import { useModal } from "./../../hooks/useModal";
 import Modal from "../../components/Tables/modal/Modal";
-import FormularioClient from "../../components/Tables/formularioClient/FormularioClient";
+import FormularioUser from "../../components/Tables/formularioUsers/FormularioUser";
 import Delete from "../../components/Tables/Delete/Delete";
 import { Button } from "@mui/material";
-import { ContainerBox, StyledBox, StyledButtonBox, StyledDivider, NavbarContainer } from "./Home.styles";
+import { ContainerBox, StyledBox, StyledButtonBox, StyledDivider, NavbarContainer } from "../home/Home.styles";
 import NavBar from "../../components/NavBar/NavBar.jsx";
 
-const operaciones = new OperationBasic("clients");
+const operaciones = new OperationBasic("users");
 
-const Home = () => {
+const Users = () => {
   const [selectRow, setSelect] = useState(null);
   const [action, setAction] = useState("");
   const token = useSelector((state) => state.auth.token);
@@ -22,16 +22,14 @@ const Home = () => {
   const [items, setItems] = useState(data);
   const { isOpen, closeModal, openModal } = useModal();
 
-  console.log("render")
   const handleSetAction = useCallback((newAction) => setAction(newAction), []);
   const handleSetSelect = useCallback((row) => setSelect(row), []);
 
   const columns = [
     { field: "id", headerName: "ID", flex: 1, isDrop: true },
+    { field: "client_id", headerName: "Client Id", flex: 1 },
     { field: "name", headerName: "Name", flex: 1 },
     { field: "email", headerName: "Email", flex: 1 },
-    { field: "code", headerName: "Code", flex: 1 },
-    { field: "details", headerName: "Details", flex: 1 },
     {
       field: "actiones",
       headerName: "Actiones",
@@ -85,7 +83,7 @@ const Home = () => {
                 ? operaciones.createItem
                 : operaciones.deleteItem
             }
-            Component={action === "delete" ? Delete : FormularioClient}
+            Component={action === "delete" ? Delete : FormularioUser}
           />
         )}
         {items && <GenericTable columns={columns} data={items} />}
@@ -94,4 +92,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Users;

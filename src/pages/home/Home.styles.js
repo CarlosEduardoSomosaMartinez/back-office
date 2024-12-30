@@ -1,6 +1,19 @@
 import { styled,Box } from "@mui/material";
 
+
+export const ContainerBox = styled(Box)(({theme})=>({
+    display:'flex',
+    height:'100%',
+
+}))
+
+export const NavbarContainer = styled(Box)(({theme})=>{
+
+})
+
+
 export const StyledBox = styled(Box)(({theme})=>({
+    flex: 9,
     marginTop:'40px',
    display:'flex',
    flexDirection:'column',

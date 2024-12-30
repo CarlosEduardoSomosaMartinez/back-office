@@ -12,10 +12,7 @@ const routes = [
         children:[
             {
                 index:true,
-                element:(<IsAuthUser >
-                            <Login/>
-                     </IsAuthUser>
-                )
+                element:(<IsAuthUser><Login/></IsAuthUser>)
             },
 
             ...privateRoutes,

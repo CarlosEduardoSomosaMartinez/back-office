@@ -13,7 +13,6 @@ const FormularioClient = ({onClose,setAction,action,row,callback})=>{
     const {data,loading,error} = useFetch(
         confirmForm?callback:()=>Promise.resolve(null),[response,token]
     )
-
     const handleSubmit = (e) =>{
         e.preventDefault()
         

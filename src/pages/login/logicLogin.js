@@ -7,7 +7,7 @@ export const onChangeForm = function(call){
 export const onSubmitForm = async function(email,password,call){
     try{
        await call(login({email,password}));
-       return "es algo"
+       return 'login'
     }catch(err){
         console.log(err)
     }
