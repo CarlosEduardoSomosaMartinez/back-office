@@ -4,22 +4,20 @@ import { StyledBox } from "../Formulario.Styled";
 import { useSelector } from "react-redux";
 import { useFetch } from "../../../hooks/useFetch";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import OperationBasic from "../../../pages/home/logicHome";
-import DropDown from "../../DropDown/DropDown";
+import ButtonToggle from "../../buttonToggle/ButtonToggle";
 
-const operaciones = new OperationBasic("clients");
 
-const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
+const FormularioBalley= ({ onClose, setAction, action, row, callback }) => {
   const [confirmForm, setConfirmForm] = useState(false);
   const [response, setResponse] = useState(row || {});
   const token = useSelector((state) => state.auth.token);
   const resHook = useFetch(confirmForm ? callback : () => Promise.resolve(null), [response, token]);
   
-  
+  console.log(row)
 
   useEffect(() => {
     if (row) {
-      setResponse(row);
+      setResponse(row); 
     }
   }, [row]);
 
@@ -27,6 +25,7 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
     e.preventDefault();
     // const date = new Date()
     // response.last_updated=date.toDateString();
+    console.log(response)
     setConfirmForm(true);
   };
 
@@ -36,10 +35,6 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
   };
 
     
-  const handleDrop = (name, value) => {
-    setResponse((prev) => ({ ...prev, [name]: value }));
-  };
-
   const handleClose = () => {
     setAction("");
     onClose();
@@ -48,40 +43,28 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
  
   const renderForm = () => (
     <StyledBox component="form" onSubmit={handleSubmit}>
-        <DropDown
-        token={token}
-        label="Client ID"
-        value={response.client_id}
-        onChange={(value) => handleDrop("client_id", value)}
-        fetchOptions={operaciones.getTables}
+      <ButtonToggle 
+      label="enabled"
+      value={response.enabled || ''}
+      onChange={(newValue)=>{setResponse((prev) => ({ ...prev, ['enabled']: newValue }));}}
       />
-      <TextField
-        required
-        label="Name"
-        name="name"
-        value={response.name || ""}
-        onChange={handleChange}
-        fullWidth
+    <ButtonToggle 
+      label="Logged"
+      value={response.logged_status || ''}
+      onChange={(newValue)=>{setResponse((prev) => ({ ...prev, ['logged_status']: newValue }));}}
       />
-      <TextField
+         <TextField
         required
-        label="config"
+        label="Phone number"
         name="config"
-        value={response.config || ""}
+        value={response.phone_number || ""}
         onChange={handleChange}
         fullWidth
       />
-     <TextField
-          required
-          label="Aoi Assistant Id"
-          name="oai_assistant_id"
-          value={response.oai_assistant_id|| ""}
-          onChange={handleChange}
-          fullWidth
-        />
-       
+  
+     
       {resHook.loading && <Typography>Cargando...</Typography>}
-      {resHook.error && <Typography color="error">Error al registrar elemento. Intente de nuevo.</Typography>}
+      {resHook.error && <Typography color="error">Error al regis trar elemento. Intente de nuevo.</Typography>}
       <Button variant="contained" color="primary" type="submit">
         Enviar
       </Button>
@@ -108,4 +91,4 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
   );
 };
 
-export default FormularioUser;
+export default FormularioBalley;

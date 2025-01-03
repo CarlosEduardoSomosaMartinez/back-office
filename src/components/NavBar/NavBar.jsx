@@ -44,13 +44,13 @@ function Navbar() {
             <ListItem onClick={() => navigate("/assistants")} button>
               <ListItemText primary="Assistants" />
             </ListItem>
-            <ListItem button>
+            <ListItem onClick={() => navigate("/channels")} button>
               <ListItemText primary="Channels" />
             </ListItem>
-            <ListItem button>
+            <ListItem button onClick={() => navigate("/Baileys")}>
               <ListItemText primary="BaileysDevice" />
             </ListItem>
-            <ListItem button>
+            <ListItem button onClick={() => navigate("/periodicJobs")}>
               <ListItemText primary="PeriodicJobs" />
             </ListItem>
           </List>

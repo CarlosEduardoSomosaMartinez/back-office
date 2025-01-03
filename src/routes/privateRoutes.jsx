@@ -2,6 +2,9 @@ import IsAuthUser from "./IsAuthUser"
 import Home from "../pages/home/Home"
 import Users from "../pages/users/Users"
 import Assistants from "../pages/Assistants/Assistants"
+import Channels from "../pages/Channels/Channels"
+import BaileysDevices from "../pages/Baileys/BaileysDevices"
+import PeriodicJobs from "../pages/PeriodicJobs/PeriodicJobs"
 
 const privateRoutes = [
   {
@@ -36,6 +39,42 @@ const privateRoutes = [
       {
         index:true,
         element:<Assistants/>
+      },
+    ]
+    
+  },
+  {
+   
+    path:"channels",
+    element:<IsAuthUser auth={true}/>,
+    children:[
+      {
+        index:true,
+        element:<Channels />
+      },
+    ]
+    
+  },
+  {
+   
+    path:"Baileys",
+    element:<IsAuthUser auth={true}/>,
+    children:[
+      {
+        index:true,
+        element:<BaileysDevices />
+      },
+    ]
+    
+  },
+  {
+   
+    path:"periodicJobs",
+    element:<IsAuthUser auth={true}/>,
+    children:[
+      {
+        index:true,
+        element:<PeriodicJobs />
       },
     ]
     

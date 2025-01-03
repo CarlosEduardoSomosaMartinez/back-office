@@ -1,6 +1,6 @@
 import { Box, TextField ,Button, Typography} from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { StyledBox } from "./FormularioClient.Styled";
+import { StyledBox } from "../Formulario.Styled";
 import { useSelector } from "react-redux";
 import { useFetch } from "../../../hooks/useFetch";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';

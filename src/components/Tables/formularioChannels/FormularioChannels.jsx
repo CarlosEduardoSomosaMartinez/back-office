@@ -7,19 +7,20 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import OperationBasic from "../../../pages/home/logicHome";
 import DropDown from "../../DropDown/DropDown";
 
-const operaciones = new OperationBasic("clients");
+const clientOp = new OperationBasic("clients");
+const assistantOp = new OperationBasic('assistants')
 
-const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
+const FormularioChannels= ({ onClose, setAction, action, row, callback }) => {
   const [confirmForm, setConfirmForm] = useState(false);
   const [response, setResponse] = useState(row || {});
   const token = useSelector((state) => state.auth.token);
   const resHook = useFetch(confirmForm ? callback : () => Promise.resolve(null), [response, token]);
   
-  
+  console.log("data 1")
 
   useEffect(() => {
     if (row) {
-      setResponse(row);
+      setResponse(row); 
     }
   }, [row]);
 
@@ -53,35 +54,34 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
         label="Client ID"
         value={response.client_id}
         onChange={(value) => handleDrop("client_id", value)}
-        fetchOptions={operaciones.getTables}
+        fetchOptions={clientOp.getTables}
       />
       <TextField
         required
-        label="Name"
-        name="name"
-        value={response.name || ""}
+        label="Type"
+        name="type"
+        value={response.type || ""}
         onChange={handleChange}
         fullWidth
       />
       <TextField
         required
-        label="config"
+        label="Config"
         name="config"
         value={response.config || ""}
         onChange={handleChange}
         fullWidth
       />
-     <TextField
-          required
-          label="Aoi Assistant Id"
-          name="oai_assistant_id"
-          value={response.oai_assistant_id|| ""}
-          onChange={handleChange}
-          fullWidth
-        />
-       
+      <DropDown
+        token={token}
+        label="Assistant id"
+        value={response.assistant_id}
+        onChange={(value) => handleDrop("assistant_id", value)}
+        fetchOptions={assistantOp.getTables}
+      />
+     
       {resHook.loading && <Typography>Cargando...</Typography>}
-      {resHook.error && <Typography color="error">Error al registrar elemento. Intente de nuevo.</Typography>}
+      {resHook.error && <Typography color="error">Error al regis trar elemento. Intente de nuevo.</Typography>}
       <Button variant="contained" color="primary" type="submit">
         Enviar
       </Button>
@@ -108,4 +108,4 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
   );
 };
 
-export default FormularioUser;
+export default FormularioChannels;

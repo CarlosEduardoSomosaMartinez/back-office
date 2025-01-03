@@ -7,19 +7,19 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import OperationBasic from "../../../pages/home/logicHome";
 import DropDown from "../../DropDown/DropDown";
 
-const operaciones = new OperationBasic("clients");
+const clientOp = new OperationBasic("clients");
 
-const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
+const FormularioPeriodic= ({ onClose, setAction, action, row, callback }) => {
   const [confirmForm, setConfirmForm] = useState(false);
   const [response, setResponse] = useState(row || {});
   const token = useSelector((state) => state.auth.token);
   const resHook = useFetch(confirmForm ? callback : () => Promise.resolve(null), [response, token]);
   
-  
+  console.log("data 1")
 
   useEffect(() => {
     if (row) {
-      setResponse(row);
+      setResponse(row); 
     }
   }, [row]);
 
@@ -53,7 +53,7 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
         label="Client ID"
         value={response.client_id}
         onChange={(value) => handleDrop("client_id", value)}
-        fetchOptions={operaciones.getTables}
+        fetchOptions={clientOp.getTables}
       />
       <TextField
         required
@@ -65,23 +65,24 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
       />
       <TextField
         required
-        label="config"
+        label="Config"
         name="config"
         value={response.config || ""}
         onChange={handleChange}
         fullWidth
       />
-     <TextField
-          required
-          label="Aoi Assistant Id"
-          name="oai_assistant_id"
-          value={response.oai_assistant_id|| ""}
-          onChange={handleChange}
-          fullWidth
-        />
-       
+    <TextField
+        required
+        label="Schedule"
+        name="schedule"
+        value={response.schedule || ""}
+        onChange={handleChange}
+        fullWidth
+      />
+ 
+     
       {resHook.loading && <Typography>Cargando...</Typography>}
-      {resHook.error && <Typography color="error">Error al registrar elemento. Intente de nuevo.</Typography>}
+      {resHook.error && <Typography color="error">Error al regis trar elemento. Intente de nuevo.</Typography>}
       <Button variant="contained" color="primary" type="submit">
         Enviar
       </Button>
@@ -108,4 +109,4 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
   );
 };
 
-export default FormularioUser;
+export default FormularioPeriodic;
