@@ -1,21 +1,22 @@
-import { Button } from "@mui/material";
 import { StyledBox } from "./ActionButton.Styled";
 import React from "react";
-
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
 
 const ActionButton = ({action,select}) =>{
     
 
     return (
         <StyledBox>
-            <Button onClick={()=>{
+            <DeleteForeverIcon onClick={()=>{
                 select()
                 action("delete")
                } 
-            }>Borrar</Button>
-            <Button onClick={()=>{
+            }/>
+            <EditIcon onClick={()=>{
                 select()
-                action("update")}}>Actualizar</Button>
+                action("update")}}
+            />
         </StyledBox>
     )
 

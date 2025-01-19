@@ -25,13 +25,13 @@ class OperationBasic{
         
     }
 
-    editItem = async(row,token)=>{
+    editItem = async(row,token,id)=>{
         try{
-            
-            const result = await AuthClient.updateElement(this.table,row,token)
+            console.log(row)
+            const result = await AuthClient.updateElement(this.table,row,token,id)
             return result
-       }catch(err){
-           console.log(err)
+       }catch(err){s
+           throw err
        }
         
     }
@@ -41,7 +41,7 @@ class OperationBasic{
             const result = await AuthClient.createItem(this.table,item,token)
             return result
         }catch(err){
-            return err
+            throw err
         }
         
         

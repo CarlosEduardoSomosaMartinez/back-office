@@ -22,7 +22,6 @@ const Home = () => {
   const [items, setItems] = useState(data);
   const { isOpen, closeModal, openModal } = useModal();
 
-  console.log("render")
   const handleSetAction = useCallback((newAction) => setAction(newAction), []);
   const handleSetSelect = useCallback((row) => setSelect(row), []);
 
@@ -31,7 +30,6 @@ const Home = () => {
     { field: "name", headerName: "Name", flex: 1 },
     { field: "email", headerName: "Email", flex: 1 },
     { field: "code", headerName: "Code", flex: 1 },
-    { field: "details", headerName: "Details", flex: 1 },
     {
       field: "actiones",
       headerName: "Actiones",
@@ -55,11 +53,15 @@ const Home = () => {
   }, [action]);
 
   useEffect(() => {
-    if (action === "sDelete") {
-      setItems((prevItems) => prevItems.filter((element) => element.id !== selectRow.id));
+    if (action === "sDelete" || action == "reloded") {
       setAction("");
+      operaciones.getTables(token)
+      .then(fetchedData => {
+        setItems(fetchedData);
+      })
+      .catch(error => {});
     }
-  }, [action, selectRow]);
+  }, [action, selectRow,token]);
 
   return (
     <ContainerBox>

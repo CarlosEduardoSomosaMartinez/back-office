@@ -52,12 +52,17 @@ const Users = () => {
     }
   }, [action]);
 
-  useEffect(() => {
-    if (action === "sDelete") {
-      setItems((prevItems) => prevItems.filter((element) => element.id !== selectRow.id));
-      setAction("");
-    }
-  }, [action, selectRow]);
+    useEffect(() => {
+      if (action === "sDelete" || action == "reloded") {
+        setAction("");
+        operaciones.getTables(token)
+        .then(fetchedData => {
+          setItems(fetchedData);
+        })
+        .catch(error => {});
+      }
+    }, [action, selectRow,token]);
+  
 
   return (
     <ContainerBox>

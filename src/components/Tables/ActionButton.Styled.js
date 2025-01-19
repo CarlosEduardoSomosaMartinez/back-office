@@ -4,6 +4,8 @@ export const StyledBox = styled(Box)(({theme})=>(
     {
         display:"flex",
         justifyContent:"space-evenly",
-        gap:"10px"
+        alignItems:"center",
+       textAlign:"center ",
+       marginTop:"15px"
     }
 ))

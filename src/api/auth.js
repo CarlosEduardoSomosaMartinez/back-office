@@ -5,32 +5,30 @@ class ApiService{
     authClient
 
      constructor(){
-        this.authClient =  ApiClientManager.getClient('authApi',"http://localhost:3000",{type:'',key:""},{})
+        this.authClient =  ApiClientManager.getClient('authApi',"https://lzqogg674ftg74ippdjunnhvdy0nbjyr.lambda-url.us-east-1.on.aws",{type:'',key:""},{})
         
      }
   
-    async login(email,password){
+    async login(email,pass){
         try{
-           const result =  await this.authClient.post('/login',{email,password})
-
-           
-           console.log(this.authClient.defaults)
+           const result =  await this.authClient.post('/login',{email,pass})
+           //agregar header
            return(result.data)
         }catch(error){
+            console.log(error)
             throw { message:error.message, data:error.response.data ,status:error.response.status}
         }
+    }
 
-
-
+    async auth(token){
+        this.authClient.defaults.headers['Authorization'] = `Bearer ${token}`
     }
 
     async getTable(name,token){
         try{
-            this.authClient.defaults.headers['Authorization'] = `Bearer ${token}`
-            const result = await this.authClient.get(`/${name}`)
-          
+            this.auth(token)
+            const result = await this.authClient.get(`/${name}`) 
             return (result.data)
-
         }catch(error){
             throw { message:error.message, data:error.response.data ,status:error.response.status} 
         }
@@ -39,8 +37,8 @@ class ApiService{
     
     async deleteElement(name,id,token){
         try{
-            
-            this.authClient.defaults.headers['Authorization'] = `Bearer ${token}`
+            this.auth(token)
+            console.log(id)
             const result = await this.authClient.delete(`/${name}/${id}`)
             return result
           
@@ -49,24 +47,26 @@ class ApiService{
         }
     }
 
-    async updateElement(name,row,token){
+    async updateElement(name,row,token,id){
         try{
-             this.authClient.defaults.headers['Authorization'] = `Bearer ${token}`;
-             const result = await this.authClient.put(`/${name}/${row.id}`,row)
+            this.auth(token)
+            console.log(token,row)
+             const result = await this.authClient.put(`/${name}/${id}`,row)
              console.log(result)
              return result;
         }catch(error){
-            console.log(error)
+            throw error
         }
     }
 
     async createItem(name,item,token){
         try{
+            this.auth(token)
             this.authClient.defaults.headers['Authorization'] = `Bearer ${token}`;
              const result = await this.authClient.post(`/${name}`,item)
              return result
         }catch(err){
-            console.log(err)
+            throw err
         }
     }
 
