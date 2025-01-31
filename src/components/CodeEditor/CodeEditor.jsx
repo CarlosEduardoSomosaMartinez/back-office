@@ -17,11 +17,11 @@ const CodeEditor = ({data,label,change}) => {
 
   return (
     <div>
-      <h2>{label}</h2>
+      <h3>{label}</h3>
       <CodeMirror
         value={JSON.stringify(jsonData, null, 2)} 
-        height="200px"
-        width='400px'
+        height="400px"
+        width='550px'
         extensions={[json(), basicSetup]} 
         onChange={handleChange} 
         theme="dark" 

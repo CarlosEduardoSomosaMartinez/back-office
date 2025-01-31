@@ -4,10 +4,9 @@ export const StyledBox = styled(Box)(({theme})=>(
     {
         margin:'20px',
         display:'flex',
-        gap:"2px",
         flexDirection:'column',
-        width:'550px',
-        height:'800px',
+        width:'300px',
+        height:'250px',
         alignItems:'center',
         justifyContent:'space-between'
     }

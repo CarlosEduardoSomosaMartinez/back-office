@@ -9,8 +9,9 @@ const Modal = ({isOpen,handleClose,setAction,Component,row,action,callback})=>{
         <Dialog sx={{
             [breakpoints.down('sm')]:{
                 marginBottom:"40%"
-            }
-        }} open={isOpen} onClose={()=>{setAction("");handleClose()}} >
+            },
+          
+        }} open={isOpen} onClose={()=>{setAction("reloded");handleClose()}} >
            {
             action==='delete'?
                 <Component onClose={handleClose} id={row.id} action={action} setAction={setAction} onDelete={callback} />

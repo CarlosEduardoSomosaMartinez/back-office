@@ -1,11 +1,11 @@
 import ApiClientManager from "./apiClientManager"
-
+import {store} from "./../context/store"
 class ApiService{
 
     authClient
 
      constructor(){
-        this.authClient =  ApiClientManager.getClient('authApi',"https://lzqogg674ftg74ippdjunnhvdy0nbjyr.lambda-url.us-east-1.on.aws",{type:'',key:""},{})
+        this.authClient =  ApiClientManager.getClient('authApi',"https://6wqwjnilkygbweybic5ywpqmse0akwlt.lambda-url.us-east-1.on.aws",{})
         
      }
   
@@ -15,7 +15,6 @@ class ApiService{
            //agregar header
            return(result.data)
         }catch(error){
-            console.log(error)
             throw { message:error.message, data:error.response.data ,status:error.response.status}
         }
     }
@@ -38,7 +37,6 @@ class ApiService{
     async deleteElement(name,id,token){
         try{
             this.auth(token)
-            console.log(id)
             const result = await this.authClient.delete(`/${name}/${id}`)
             return result
           
@@ -50,9 +48,7 @@ class ApiService{
     async updateElement(name,row,token,id){
         try{
             this.auth(token)
-            console.log(token,row)
              const result = await this.authClient.put(`/${name}/${id}`,row)
-             console.log(result)
              return result;
         }catch(error){
             throw error

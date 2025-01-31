@@ -6,15 +6,29 @@ import { useFetch } from "../../../hooks/useFetch";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import OperationBasic from "../../../pages/home/logicHome";
 import DropDown from "../../DropDown/DropDown";
-
+import CodeEditor from "../../CodeEditor/CodeEditor";
 const operaciones = new OperationBasic("clients");
 
 const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
   const [confirmForm, setConfirmForm] = useState(false);
   const [response, setResponse] = useState(row || {});
   const token = useSelector((state) => state.auth.token);
-  const resHook = useFetch(confirmForm ? callback : () => Promise.resolve(null), [response, token]);
+  const [submissionError,setSubmissionError] = useState(null)
+
+   const { data, loading, error } = useFetch(
+          confirmForm ? callback : () => Promise.resolve(null),
+          action === "update"
+              ? [{ name: response.name, config: response.config, last_updated: response.last_updated,oai_assistant_id:response.oai_assistant_id }, token, response.id]
+              : [response, token]
+      );
   
+      
+      useEffect(() => {
+          if (error) {
+              setConfirmForm(false);  
+              setSubmissionError("Error al registrar elemento. Intenta de nuevo.");
+          }
+      }, [error]);
   
 
   useEffect(() => {
@@ -25,8 +39,8 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // const date = new Date()
-    // response.last_updated=date.toDateString();
+     const date = new Date()
+    response.last_updated=date.toDateString();
     setConfirmForm(true);
   };
 
@@ -41,20 +55,23 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
   };
 
   const handleClose = () => {
-    setAction("");
+    setAction("reloded");
     onClose();
   };
 
+  const handleJson = (value) => {
+    setResponse((prev) => ({ ...prev, config: value }));
+};
  
   const renderForm = () => (
     <StyledBox component="form" onSubmit={handleSubmit}>
-        <DropDown
+        {action==="create"&&<DropDown
         token={token}
         label="Client ID"
         value={response.client_id}
         onChange={(value) => handleDrop("client_id", value)}
         fetchOptions={operaciones.getTables}
-      />
+      />}
       <TextField
         required
         label="Name"
@@ -63,14 +80,7 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
         onChange={handleChange}
         fullWidth
       />
-      <TextField
-        required
-        label="config"
-        name="config"
-        value={response.config || ""}
-        onChange={handleChange}
-        fullWidth
-      />
+
      <TextField
           required
           label="Aoi Assistant Id"
@@ -79,9 +89,14 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
           onChange={handleChange}
           fullWidth
         />
+             <CodeEditor
+        data={response.config}
+        label="Config"
+        change={handleJson}
+      />
        
-      {resHook.loading && <Typography>Cargando...</Typography>}
-      {resHook.error && <Typography color="error">Error al registrar elemento. Intente de nuevo.</Typography>}
+      {loading && <Typography>Cargando...</Typography>}
+      {error && <Typography color="error">{submissionError}</Typography>}
       <Button variant="contained" color="primary" type="submit">
         Enviar
       </Button>
@@ -103,7 +118,7 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
       <Typography sx={{ textAlign: "center", margin: "10px" }}>
         {action === "update" ? "Actualizar" : "Registrar"}
       </Typography>
-      {!resHook.data ? renderForm() : renderSuccess()}
+      {!data ? renderForm() : renderSuccess()}
     </>
   );
 };

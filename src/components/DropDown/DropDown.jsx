@@ -6,7 +6,7 @@ const DropDown = ({ label, value, onChange, fetchOptions,token }) => {
   const { data: options, loading, error } = useFetch(fetchOptions, [token]);
   
   return (
-    <FormControl fullWidth>
+    <FormControl fullWidth required={true}>
       <InputLabel>{label}</InputLabel>
       {loading ? (
         <CircularProgress size={24} sx={{ margin: "10px auto" }} />

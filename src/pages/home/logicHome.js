@@ -9,9 +9,10 @@ class OperationBasic{
     getTables = async (token) =>{
         try{
             const result = await AuthClient.getTable(this.table,token);
+
             return result   
         }catch(err){
-    
+           throw err
         }
     }
 
@@ -20,7 +21,7 @@ class OperationBasic{
              const result = await AuthClient.deleteElement(this.table,id,token)
              return result
         }catch(err){
-            console.log(err)
+            throw err
         }
         
     }
@@ -43,8 +44,16 @@ class OperationBasic{
         }catch(err){
             throw err
         }
-        
-        
+    }
+
+    getItems = async(ruta,token)=>{
+        try{
+            const result = await AuthClient.getTable(ruta,token)
+            return result
+        }catch(error){
+            throw error
+        }
+
     }
 }
 

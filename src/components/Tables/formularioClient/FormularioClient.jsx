@@ -38,8 +38,12 @@ const FormularioClient = ({ onClose, setAction, action, row, callback }) => {
         setResponse((prev) => ({ ...prev, [name]: value }));
     };
 
+   
+
+
+
     const handleClose = () => {
-        setAction("reloded");
+        setAction("reloded")
         onClose();
     };
 
@@ -53,7 +57,7 @@ const FormularioClient = ({ onClose, setAction, action, row, callback }) => {
                 {action === 'update' ? 'Actualizar' : 'Registrar'}
             </Typography>
             {!data ? (
-                <StyledBox component="form" onSubmit={handleSubmit}>
+                <StyledBox component="form"  onSubmit={handleSubmit}>
                     <TextField
                         required
                         label="Nombre"

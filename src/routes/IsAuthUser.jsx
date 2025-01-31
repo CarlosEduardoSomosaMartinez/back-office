@@ -7,9 +7,9 @@ const  IsAuthUser = ({auth=false,children}) => {
     console.log(isAuth)
 
     if(auth){
-        return isAuth?<Outlet/> || children :<Navigate to='/login' />
+        return isAuth?children ||<Outlet/>  :<Navigate to='/login' />
   }
-         return !isAuth?<Outlet/> || children:<Navigate to='/home' />
+         return !isAuth? children||<Outlet/> :<Navigate to='/home' />
 
 
 

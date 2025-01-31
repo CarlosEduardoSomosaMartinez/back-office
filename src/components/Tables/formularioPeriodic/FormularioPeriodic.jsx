@@ -6,6 +6,7 @@ import { useFetch } from "../../../hooks/useFetch";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import OperationBasic from "../../../pages/home/logicHome";
 import DropDown from "../../DropDown/DropDown";
+import CodeEditor from "../../CodeEditor/CodeEditor";
 
 const clientOp = new OperationBasic("clients");
 
@@ -13,9 +14,21 @@ const FormularioPeriodic= ({ onClose, setAction, action, row, callback }) => {
   const [confirmForm, setConfirmForm] = useState(false);
   const [response, setResponse] = useState(row || {});
   const token = useSelector((state) => state.auth.token);
-  const resHook = useFetch(confirmForm ? callback : () => Promise.resolve(null), [response, token]);
-  
-  console.log("data 1")
+    const [submissionError, setSubmissionError] = useState(null);
+  const { data, loading, error } = useFetch(
+      confirmForm ? callback : () => Promise.resolve(null),
+      action === "update"
+          ? [{ name: response.name, schedule: response.schedule, config: response.config }, token, response.id]
+          : [response, token]
+  );
+
+
+    useEffect(() => {
+        if (error) {
+            setConfirmForm(false);  
+            setSubmissionError("Error al registrar elemento. Intenta de nuevo.");
+        }
+    }, [error]);
 
   useEffect(() => {
     if (row) {
@@ -27,6 +40,7 @@ const FormularioPeriodic= ({ onClose, setAction, action, row, callback }) => {
     e.preventDefault();
     // const date = new Date()
     // response.last_updated=date.toDateString();
+    console.log(response)
     setConfirmForm(true);
   };
 
@@ -41,33 +55,29 @@ const FormularioPeriodic= ({ onClose, setAction, action, row, callback }) => {
   };
 
   const handleClose = () => {
-    setAction("");
+    setAction("reloded");
     onClose();
   };
+
+  const handleJson = (value) => {
+    setResponse((prev) => ({ ...prev, config: value }));
+};
 
  
   const renderForm = () => (
     <StyledBox component="form" onSubmit={handleSubmit}>
-        <DropDown
+        {action==='create'&&<DropDown
         token={token}
         label="Client ID"
         value={response.client_id}
         onChange={(value) => handleDrop("client_id", value)}
         fetchOptions={clientOp.getTables}
-      />
+      />}
       <TextField
         required
         label="Name"
         name="name"
         value={response.name || ""}
-        onChange={handleChange}
-        fullWidth
-      />
-      <TextField
-        required
-        label="Config"
-        name="config"
-        value={response.config || ""}
         onChange={handleChange}
         fullWidth
       />
@@ -79,10 +89,15 @@ const FormularioPeriodic= ({ onClose, setAction, action, row, callback }) => {
         onChange={handleChange}
         fullWidth
       />
+      <CodeEditor
+        data={response.config}
+        label="Config"
+        change={handleJson}
+      />
  
      
-      {resHook.loading && <Typography>Cargando...</Typography>}
-      {resHook.error && <Typography color="error">Error al regis trar elemento. Intente de nuevo.</Typography>}
+      {loading && <Typography>Cargando...</Typography>}
+      {error && <Typography color="error">{submissionError}</Typography>}
       <Button variant="contained" color="primary" type="submit">
         Enviar
       </Button>
@@ -104,7 +119,7 @@ const FormularioPeriodic= ({ onClose, setAction, action, row, callback }) => {
       <Typography sx={{ textAlign: "center", margin: "10px" }}>
         {action === "update" ? "Actualizar" : "Registrar"}
       </Typography>
-      {!resHook.data ? renderForm() : renderSuccess()}
+      {!data ? renderForm() : renderSuccess()}
     </>
   );
 };

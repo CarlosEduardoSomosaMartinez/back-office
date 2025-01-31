@@ -1,6 +1,6 @@
 import { Box, TextField, Button, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { StyledBox } from "../Formulario.Styled";
+import { StyledBox } from "./Formulario.Styled";
 import { useSelector } from "react-redux";
 import { useFetch } from "../../../hooks/useFetch";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
@@ -13,9 +13,17 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
   const [confirmForm, setConfirmForm] = useState(false);
   const [response, setResponse] = useState(row || {});
   const token = useSelector((state) => state.auth.token);
-  const resHook = useFetch(confirmForm ? callback : () => Promise.resolve(null), [response, token]);
+  const {error,data,loading} = useFetch(confirmForm ? callback : () => Promise.resolve(null),
+   action === "update"
+    ?[{client_id:response.client_id,name:response.name,email:response.email},token,response.id]
+    :[response,token]);
 
-  
+   
+      useEffect(() => {
+          if (error) {
+              setConfirmForm(false);  
+          }
+      }, [error]);
 
   useEffect(() => {
     if (row) {
@@ -39,21 +47,22 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
   };
 
   const handleClose = () => {
-    setAction("");
+    setAction("reloded");
     onClose();
   };
 
  
   const renderForm = () => (
-    <StyledBox component="form" onSubmit={handleSubmit}>
-        <DropDown
+    <StyledBox component="form"  onSubmit={handleSubmit}>
+       { action==="create"&&<DropDown
         token={token}
         label="Client ID"
         value={response.client_id}
         onChange={(value) => handleDrop("client_id", value)}
         fetchOptions={operaciones.getTables}
-      />
+      />}
       <TextField
+      autoComplete="off"
         required
         label="Name"
         name="name"
@@ -62,6 +71,7 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
         fullWidth
       />
       <TextField
+      autoComplete="new-password"
         required
         label="Email"
         name="email"
@@ -71,6 +81,7 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
       />
       {action === "create" && (
         <TextField
+          autoComplete="new-password"
           required
           label="Password"
           type="password"
@@ -80,8 +91,8 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
           fullWidth
         />
       )}
-      {resHook.loading && <Typography>Cargando...</Typography>}
-      {resHook.error && <Typography color="error">Error al registrar elemento. Intente de nuevo.</Typography>}
+      {loading && <Typography>Cargando...</Typography>}
+      {error && <Typography color="error">Error al registrar elemento. Intente de nuevo.</Typography>}
       <Button variant="contained" color="primary" type="submit">
         Enviar
       </Button>
@@ -103,7 +114,7 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
       <Typography sx={{ textAlign: "center", margin: "10px" }}>
         {action === "update" ? "Actualizar" : "Registrar"}
       </Typography>
-      {!resHook.data ? renderForm() : renderSuccess()}
+      {!data ? renderForm() : renderSuccess()}
     </>
   );
 };

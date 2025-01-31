@@ -11,7 +11,7 @@ const routes = [
         
         children:[
             {
-                index:true,
+                path:"",
                 element:(<IsAuthUser><Login/></IsAuthUser>)
             },
 

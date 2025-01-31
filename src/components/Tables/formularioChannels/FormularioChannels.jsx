@@ -6,35 +6,38 @@ import { useFetch } from "../../../hooks/useFetch";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import OperationBasic from "../../../pages/home/logicHome";
 import DropDown from "../../DropDown/DropDown";
-
+import CodeEditor from "../../CodeEditor/CodeEditor";
+import ChannelTypeSelect from "../../ChannelTypeSelect";
 const clientOp = new OperationBasic("clients");
 const assistantOp = new OperationBasic('assistants')
 
 const FormularioChannels= ({ onClose, setAction, action, row, callback }) => {
   const [confirmForm, setConfirmForm] = useState(false);
   const [response, setResponse] = useState(row || {});
+   const [submissionError, setSubmissionError] = useState(null);
   const token = useSelector((state) => state.auth.token);
-  const resHook = useFetch(confirmForm ? callback : () => Promise.resolve(null), [response, token]);
-  
-  console.log("data 1")
+  const { data, loading, error } = useFetch(
+        confirmForm ? callback : () => Promise.resolve(null),
+        action === "update"
+            ? [{ type: response.type, config: response.config, assistant_id: response.assistant_id }, token, response.id]
+            : [response, token]
+    );
 
   useEffect(() => {
-    if (row) {
-      setResponse(row); 
+    if (error) {
+        setConfirmForm(false);  
+        setSubmissionError("Error al registrar elemento. Intenta de nuevo.");
     }
-  }, [row]);
+    }, [error]);
+
+   
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // const date = new Date()
-    // response.last_updated=date.toDateString();
     setConfirmForm(true);
+    setSubmissionError(null);  
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setResponse((prev) => ({ ...prev, [name]: value }));
-  };
 
     
   const handleDrop = (name, value) => {
@@ -42,46 +45,50 @@ const FormularioChannels= ({ onClose, setAction, action, row, callback }) => {
   };
 
   const handleClose = () => {
-    setAction("");
+    setAction("reloded")
     onClose();
+
   };
 
- 
+  const handleJson = (value) => {
+    setResponse((prev) => ({ ...prev, config: value }));
+  };
+
+  const handleType = (value) =>{
+    setResponse((prev)=>({...prev,type:value.target.value}))
+  }
+
   const renderForm = () => (
     <StyledBox component="form" onSubmit={handleSubmit}>
-        <DropDown
+        {action === "create"&& <DropDown
         token={token}
         label="Client ID"
         value={response.client_id}
         onChange={(value) => handleDrop("client_id", value)}
         fetchOptions={clientOp.getTables}
-      />
-      <TextField
+      />}
+      <ChannelTypeSelect
+        value={response.type}
+        onChange={handleType}
         required
-        label="Type"
-        name="type"
-        value={response.type || ""}
-        onChange={handleChange}
-        fullWidth
+      
       />
-      <TextField
-        required
-        label="Config"
-        name="config"
-        value={response.config || ""}
-        onChange={handleChange}
-        fullWidth
-      />
-      <DropDown
+  
+      {response.client_id &&<DropDown
         token={token}
         label="Assistant id"
         value={response.assistant_id}
         onChange={(value) => handleDrop("assistant_id", value)}
-        fetchOptions={assistantOp.getTables}
-      />
-     
-      {resHook.loading && <Typography>Cargando...</Typography>}
-      {resHook.error && <Typography color="error">Error al regis trar elemento. Intente de nuevo.</Typography>}
+        fetchOptions={(token)=>assistantOp.getItems(`assistantsM/${response.client_id}`,token)}
+      />}
+      {!response.client_id && <Typography sx={{color:"red" ,fontSize:"17px", marginRight:"415px"}}>Assistant Id</Typography>}
+      <CodeEditor
+          data={response.config}
+          label="Config"
+          change={handleJson}
+        />
+      {loading && <Typography>Cargando...</Typography>}
+      {error && <Typography color="error">{submissionError}</Typography>}
       <Button variant="contained" color="primary" type="submit">
         Enviar
       </Button>
@@ -103,7 +110,7 @@ const FormularioChannels= ({ onClose, setAction, action, row, callback }) => {
       <Typography sx={{ textAlign: "center", margin: "10px" }}>
         {action === "update" ? "Actualizar" : "Registrar"}
       </Typography>
-      {!resHook.data ? renderForm() : renderSuccess()}
+      {!data ? renderForm() : renderSuccess()}
     </>
   );
 };

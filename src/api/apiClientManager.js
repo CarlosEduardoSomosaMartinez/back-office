@@ -1,3 +1,5 @@
+import { logout } from "../context/auth/userSlice";
+import { store } from "../context/store";
 import AxiosFactory from "./AxiosFactory";
 
 class ApiClientManager{
@@ -16,17 +18,25 @@ class ApiClientManager{
             }
 
             this.instance[name] = AxiosFactory.createClient(baseUrl,{...option,headers,params});
+            this.inteceptor(name)
         }
         return this.instance[name];
-    
-
-
     }
 
     static setAuth(name,auth){
         this.instance[name].defaults.headers['Authorization'] = `Bearer ${auth}`
     }
     
+    static inteceptor(name){
+        this.instance[name].interceptors.response.use(
+            response => response,
+            async (err)=>{
+                if(err.response?.status === 401){
+                    store.dispatch(logout())
+                }
+            }
+        )
+    }
     
 }
 

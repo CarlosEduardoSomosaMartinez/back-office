@@ -7,7 +7,7 @@ export const StyledBox = styled(Box)(({theme})=>(
         gap:"2px",
         flexDirection:'column',
         width:'550px',
-        height:'800px',
+        height:'400px',
         alignItems:'center',
         justifyContent:'space-between'
     }

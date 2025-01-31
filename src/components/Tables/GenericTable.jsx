@@ -11,7 +11,12 @@ const GenericTable = ({columns,data}) =>{
       com
       columns={columns}
       rows={info}
-      pageSize={5}
+      initialState={{
+        pagination: {
+          paginationModel: { pageSize: 14 }
+        }
+      }}
+      
     />
     )
 }

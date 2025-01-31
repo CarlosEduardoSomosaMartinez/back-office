@@ -5,9 +5,14 @@ import Assistants from "../pages/Assistants/Assistants"
 import Channels from "../pages/Channels/Channels"
 import BaileysDevices from "../pages/Baileys/BaileysDevices"
 import PeriodicJobs from "../pages/PeriodicJobs/PeriodicJobs"
-
+import { Layout } from "../pages/layout"
 const privateRoutes = [
-  {
+
+{
+  path:"",
+    element:  <Layout/>,
+  children:
+  [  {
    
     path:"home",
     element:<IsAuthUser auth={true}/>,
@@ -78,7 +83,7 @@ const privateRoutes = [
       },
     ]
     
-  }
+  }]}
 ]
 
 export default privateRoutes

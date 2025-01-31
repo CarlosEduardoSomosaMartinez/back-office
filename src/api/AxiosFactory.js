@@ -4,7 +4,7 @@ class AxiosFactory{
     static createClient(baseURL,option={}){
         return axios.create({
             baseURL,
-            timeout:option.timeout||1000,
+            timeout:option.timeout||2000,
             headers:option.headers||{},
             ...option,
         })

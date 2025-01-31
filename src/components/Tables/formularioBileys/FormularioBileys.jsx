@@ -1,6 +1,6 @@
 import { Box, TextField, Button, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { StyledBox } from "../Formulario.Styled";
+import { StyledBox } from "./Formulario.Styled";
 import { useSelector } from "react-redux";
 import { useFetch } from "../../../hooks/useFetch";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
@@ -10,22 +10,29 @@ import ButtonToggle from "../../buttonToggle/ButtonToggle";
 const FormularioBalley= ({ onClose, setAction, action, row, callback }) => {
   const [confirmForm, setConfirmForm] = useState(false);
   const [response, setResponse] = useState(row || {});
+  const [submissionError, setSubmissionError] = useState(null);
   const token = useSelector((state) => state.auth.token);
-  const resHook = useFetch(confirmForm ? callback : () => Promise.resolve(null), [response, token]);
-  
-  console.log(row)
+  const { data, loading, error } = useFetch(
+        confirmForm ? callback : () => Promise.resolve(null),
+        action === "update"
+            ? [{ enabled: response.enabled }, token, response.id]
+            : [response, token]
+    );
+ 
 
-  useEffect(() => {
-    if (row) {
-      setResponse(row); 
-    }
-  }, [row]);
+    useEffect(() => {
+      if (error) {
+          setConfirmForm(false);  
+          setSubmissionError("Error al registrar elemento. Intenta de nuevo.");
+      }
+      }, [error]);
+    
+       
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // const date = new Date()
     // response.last_updated=date.toDateString();
-    console.log(response)
     setConfirmForm(true);
   };
 
@@ -36,35 +43,32 @@ const FormularioBalley= ({ onClose, setAction, action, row, callback }) => {
 
     
   const handleClose = () => {
-    setAction("");
+    setAction("reloded");
     onClose();
   };
 
  
   const renderForm = () => (
     <StyledBox component="form" onSubmit={handleSubmit}>
-      <ButtonToggle 
-      label="enabled"
-      value={response.enabled || ''}
-      onChange={(newValue)=>{setResponse((prev) => ({ ...prev, ['enabled']: newValue }));}}
-      />
-    <ButtonToggle 
-      label="Logged"
-      value={response.logged_status || ''}
-      onChange={(newValue)=>{setResponse((prev) => ({ ...prev, ['logged_status']: newValue }));}}
-      />
-         <TextField
+
+     {action ==="create" && <TextField
         required
+        type="tel"
         label="Phone number"
-        name="config"
+        name="phone_number"
         value={response.phone_number || ""}
         onChange={handleChange}
         fullWidth
+      />}
+            <ButtonToggle 
+      label="Enabled"
+      value={response.enabled || ''}
+      onChange={(newValue)=>{setResponse((prev) => ({ ...prev, ['enabled']: newValue }));}}
       />
   
      
-      {resHook.loading && <Typography>Cargando...</Typography>}
-      {resHook.error && <Typography color="error">Error al regis trar elemento. Intente de nuevo.</Typography>}
+      {loading && <Typography>Cargando...</Typography>}
+      {error && <Typography color="error">{submissionError}</Typography>}
       <Button variant="contained" color="primary" type="submit">
         Enviar
       </Button>
@@ -86,7 +90,7 @@ const FormularioBalley= ({ onClose, setAction, action, row, callback }) => {
       <Typography sx={{ textAlign: "center", margin: "10px" }}>
         {action === "update" ? "Actualizar" : "Registrar"}
       </Typography>
-      {!resHook.data ? renderForm() : renderSuccess()}
+      {!data ? renderForm() : renderSuccess()}
     </>
   );
 };
