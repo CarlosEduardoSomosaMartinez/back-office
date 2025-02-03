@@ -6,13 +6,10 @@ import { useEffect, useState } from "react";
 import { onChangeForm,onSubmitForm } from "../../pages/login/logicLogin";
 import { useDispatch,useSelector} from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "@mui/material";  
 
 const LoginForm = ()=>{
-     const theme = useTheme(); 
-    const { breakpoints } = theme;
-
-    const {isAuthenticated,error} = useSelector((state)=>state.auth);
+    
+    const {isAuthenticated,error, loading} = useSelector((state)=>state.auth);
     const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
     const [isOpen,setIsOpen] = useState(false)
@@ -27,6 +24,7 @@ const LoginForm = ()=>{
 
     useEffect(()=>{
         if(error){
+            console.log('se cometio un error')
             setIsOpen(true)
         }
     },[error])
@@ -45,10 +43,12 @@ const LoginForm = ()=>{
        <Dialog sx={{marginBottom:'280px'}}open={isOpen} onClose={()=>setIsOpen(false)}>
             <Typography sx={{margin:'30px'}}>{error}</Typography>
        </Dialog>
+        
         <TextField label="Email" type="email" variant="outlined"  fullWidth margin="normal"  value={email} onChange={onChangeForm(setEmail)} required/>
         <TextField label="Password" type="password" variant="outlined" fullWidth margin="normal" value={password} onChange={onChangeForm(setPassword)} required/>
         <StyledBox>
-            <ButtonGeneralCustom label="login" typed="submit" />
+            {!loading && <ButtonGeneralCustom label="login" typed="submit" />}
+            {loading && <Typography sx={{margin:'30px'}}>Cargando...</Typography> }
         </StyledBox>
         
     </form>)

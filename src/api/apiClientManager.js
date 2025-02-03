@@ -32,8 +32,9 @@ class ApiClientManager{
             response => response,
             async (err)=>{
                 if(err.response?.status === 401){
-                    store.dispatch(logout())
+                   store.dispatch(logout())
                 }
+                return Promise.reject(err)
             }
         )
     }
