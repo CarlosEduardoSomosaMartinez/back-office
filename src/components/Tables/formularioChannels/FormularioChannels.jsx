@@ -11,35 +11,35 @@ import ChannelTypeSelect from "../../ChannelTypeSelect";
 const clientOp = new OperationBasic("clients");
 const assistantOp = new OperationBasic('assistants')
 
-const FormularioChannels= ({ onClose, setAction, action, row, callback }) => {
+const FormularioChannels = ({ onClose, setAction, action, row, callback }) => {
   const [confirmForm, setConfirmForm] = useState(false);
   const [response, setResponse] = useState(row || {});
-   const [submissionError, setSubmissionError] = useState(null);
+  const [submissionError, setSubmissionError] = useState(null);
   const token = useSelector((state) => state.auth.token);
   const { data, loading, error } = useFetch(
-        confirmForm ? callback : () => Promise.resolve(null),
-        action === "update"
-            ? [{ type: response.type, config: response.config, assistant_id: response.assistant_id }, token, response.id]
-            : [response, token]
-    );
+    confirmForm ? callback : () => Promise.resolve(null),
+    action === "update"
+      ? [{ type: response.type, config: response.config, assistant_id: response.assistant_id }, token, response.id]
+      : [response, token]
+  );
 
   useEffect(() => {
     if (error) {
-        setConfirmForm(false);  
-        setSubmissionError("Error al registrar elemento. Intenta de nuevo.");
+      setConfirmForm(false);
+      setSubmissionError("Error al registrar elemento. Intenta de nuevo.");
     }
-    }, [error]);
+  }, [error]);
 
-   
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setConfirmForm(true);
-    setSubmissionError(null);  
+    setSubmissionError(null);
   };
 
 
-    
+
   const handleDrop = (name, value) => {
     setResponse((prev) => ({ ...prev, [name]: value }));
   };
@@ -54,13 +54,13 @@ const FormularioChannels= ({ onClose, setAction, action, row, callback }) => {
     setResponse((prev) => ({ ...prev, config: value }));
   };
 
-  const handleType = (value) =>{
-    setResponse((prev)=>({...prev,type:value.target.value}))
+  const handleType = (value) => {
+    setResponse((prev) => ({ ...prev, type: value.target.value }))
   }
 
   const renderForm = () => (
     <StyledBox component="form" onSubmit={handleSubmit}>
-        {action === "create"&& <DropDown
+      {action === "create" && <DropDown
         token={token}
         label="Client ID"
         value={response.client_id}
@@ -71,26 +71,26 @@ const FormularioChannels= ({ onClose, setAction, action, row, callback }) => {
         value={response.type}
         onChange={handleType}
         required
-      
+
       />
-  
-      {response.client_id &&<DropDown
+
+      {response.client_id && <DropDown
         token={token}
         label="Assistant id"
         value={response.assistant_id}
         onChange={(value) => handleDrop("assistant_id", value)}
-        fetchOptions={(token)=>assistantOp.getItems(`assistantsM/${response.client_id}`,token)}
+        fetchOptions={(token) => assistantOp.getItems(`assistantsM/${response.client_id}`, token)}
       />}
-      {!response.client_id && <Typography sx={{color:"red" ,fontSize:"17px", marginRight:"415px"}}>Assistant Id</Typography>}
+      {!response.client_id && <Typography sx={{ color: "red", fontSize: "17px", marginRight: "415px" }}>Assistant Id</Typography>}
       <CodeEditor
-          data={response.config}
-          label="Config"
-          change={handleJson}
-        />
+        data={response.config}
+        label="Config"
+        change={handleJson}
+      />
       {loading && <Typography>Cargando...</Typography>}
       {error && <Typography color="error">{submissionError}</Typography>}
       <Button variant="contained" color="primary" type="submit">
-        Enviar
+        {action === "update" ? "Actulizar" : "Crear"}
       </Button>
     </StyledBox>
   );

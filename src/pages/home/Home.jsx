@@ -10,11 +10,11 @@ import Modal from "../../components/Tables/modal/Modal";
 import FormularioClient from "../../components/Tables/formularioClient/FormularioClient";
 import Delete from "../../components/Tables/Delete/Delete";
 import LoopIcon from '@mui/icons-material/Loop';
-import { 
-  ContainerBox, 
-  StyledBox, 
-  StyledButtonBox, 
-  StyledDivider, 
+import {
+  ContainerBox,
+  StyledBox,
+  StyledButtonBox,
+  StyledDivider,
 } from "./Home.styles";
 
 
@@ -29,9 +29,9 @@ const ACTIONS = {
 const operaciones = new OperationBasic("clients");
 
 const MemoizedActionButton = React.memo(({ params, handleSetAction, handleSetSelect }) => (
-  <ActionButton 
-    action={handleSetAction} 
-    select={() => handleSetSelect(params.row)} 
+  <ActionButton
+    action={handleSetAction}
+    select={() => handleSetSelect(params.row)}
   />
 ));
 
@@ -41,14 +41,14 @@ const LoadingState = () => (
   </Box>
 );
 
-const ErrorState = ({ message}) => (
-  <Box p={2} display="flex"  alignContent={"center"} justifyContent={"center"} marginTop="30vh">
+const ErrorState = ({ message }) => (
+  <Box p={2} display="flex" alignContent={"center"} justifyContent={"center"} marginTop="30vh">
     <Box textAlign="center">
-          <Typography color="error">
-      Error loading data: {message|| ""}
+      <Typography color="error">
+        Error loading data: {message || ""}
 
-    </Typography>
-    <LoopIcon onClick={()=>window.location.reload()} color="error" sx={{fontSize:"80px",cursor:'pointer'}}/>
+      </Typography>
+      <LoopIcon onClick={() => window.location.reload()} color="error" sx={{ fontSize: "80px", cursor: 'pointer' }} />
     </Box>
 
   </Box>
@@ -76,7 +76,7 @@ const Home = () => {
       headerName: "Actiones",
       flex: 1,
       renderCell: (params) => (
-        <MemoizedActionButton 
+        <MemoizedActionButton
           params={params}
           handleSetAction={handleSetAction}
           handleSetSelect={handleSetSelect}
@@ -128,10 +128,11 @@ const Home = () => {
     <ContainerBox>
       <StyledBox>
         <StyledButtonBox>
-          <StyledDivider />
-          <Button onClick={handleNewElement}>Nuevo Elemento</Button>
+          <Typography sx={{ flex: 1 }} variant="h1">Clients</Typography>
+          <StyledDivider sx={{ flex: 9 }} />
+          <Button sx={{ flex: 1 }} onClick={handleNewElement}>Nuevo Clients</Button>
         </StyledButtonBox>
-        
+
         {action && isOpen && (
           <Modal
             isOpen={isOpen}
@@ -143,7 +144,7 @@ const Home = () => {
             Component={action === ACTIONS.DELETE ? Delete : FormularioClient}
           />
         )}
-        
+
         {items && <GenericTable columns={columns} data={items} />}
       </StyledBox>
     </ContainerBox>

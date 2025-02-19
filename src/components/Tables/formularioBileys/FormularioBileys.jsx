@@ -7,27 +7,27 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ButtonToggle from "../../buttonToggle/ButtonToggle";
 
 
-const FormularioBalley= ({ onClose, setAction, action, row, callback }) => {
+const FormularioBalley = ({ onClose, setAction, action, row, callback }) => {
   const [confirmForm, setConfirmForm] = useState(false);
   const [response, setResponse] = useState(row || {});
   const [submissionError, setSubmissionError] = useState(null);
   const token = useSelector((state) => state.auth.token);
   const { data, loading, error } = useFetch(
-        confirmForm ? callback : () => Promise.resolve(null),
-        action === "update"
-            ? [{ enabled: response.enabled }, token, response.id]
-            : [response, token]
-    );
- 
+    confirmForm ? callback : () => Promise.resolve(null),
+    action === "update"
+      ? [{ enabled: response.enabled }, token, response.id]
+      : [response, token]
+  );
 
-    useEffect(() => {
-      if (error) {
-          setConfirmForm(false);  
-          setSubmissionError("Error al registrar elemento. Intenta de nuevo.");
-      }
-      }, [error]);
-    
-       
+
+  useEffect(() => {
+    if (error) {
+      setConfirmForm(false);
+      setSubmissionError("Error al registrar elemento. Intenta de nuevo.");
+    }
+  }, [error]);
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -41,17 +41,17 @@ const FormularioBalley= ({ onClose, setAction, action, row, callback }) => {
     setResponse((prev) => ({ ...prev, [name]: value }));
   };
 
-    
+
   const handleClose = () => {
     setAction("reloded");
     onClose();
   };
 
- 
+
   const renderForm = () => (
     <StyledBox component="form" onSubmit={handleSubmit}>
 
-     {action ==="create" && <TextField
+      {action === "create" && <TextField
         required
         type="tel"
         label="Phone number"
@@ -60,17 +60,17 @@ const FormularioBalley= ({ onClose, setAction, action, row, callback }) => {
         onChange={handleChange}
         fullWidth
       />}
-            <ButtonToggle 
-      label="Enabled"
-      value={response.enabled || ''}
-      onChange={(newValue)=>{setResponse((prev) => ({ ...prev, ['enabled']: newValue }));}}
+      <ButtonToggle
+        label="Enabled"
+        value={response.enabled || ''}
+        onChange={(newValue) => { setResponse((prev) => ({ ...prev, ['enabled']: newValue })); }}
       />
-  
-     
+
+
       {loading && <Typography>Cargando...</Typography>}
       {error && <Typography color="error">{submissionError}</Typography>}
       <Button variant="contained" color="primary" type="submit">
-        Enviar
+        {action === "update" ? "Actulizar" : "Crear"}
       </Button>
     </StyledBox>
   );

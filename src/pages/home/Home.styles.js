@@ -26,8 +26,11 @@ export const StyledButtonBox = styled(Box)(({theme})=>(
     {
         display:"flex",
         justifyContent:'flex-end',
+        alignItems:"center",
         width:"95%",
-        gap:"20px"
+        gap:"20px",
+        
+
     }
 ))
 

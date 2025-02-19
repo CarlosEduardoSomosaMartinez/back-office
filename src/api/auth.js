@@ -5,7 +5,7 @@ class ApiService{
     authClient
 
      constructor(){
-        this.authClient =  ApiClientManager.getClient('authApi',"https://6wqwjnilkygbweybic5ywpqmse0akwlt.lambda-url.us-east-1.on.aws",{})
+        this.authClient =  ApiClientManager.getClient('authApi',"https://lzqogg674ftg74ippdjunnhvdy0nbjyr.lambda-url.us-east-1.on.aws",{})
         
      }
   

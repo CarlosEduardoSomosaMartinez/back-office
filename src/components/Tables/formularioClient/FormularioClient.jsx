@@ -19,18 +19,18 @@ const FormularioClient = ({ onClose, setAction, action, row, callback }) => {
             : [response, token]
     );
 
-    
+
     useEffect(() => {
         if (error) {
-            setConfirmForm(false);  
+            setConfirmForm(false);
             setSubmissionError("Error al registrar elemento. Intenta de nuevo.");
         }
     }, [error]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setConfirmForm(true);  
-        setSubmissionError(null);  
+        setConfirmForm(true);
+        setSubmissionError(null);
     };
 
     const handleChange = (e) => {
@@ -38,7 +38,7 @@ const FormularioClient = ({ onClose, setAction, action, row, callback }) => {
         setResponse((prev) => ({ ...prev, [name]: value }));
     };
 
-   
+
 
 
 
@@ -57,7 +57,7 @@ const FormularioClient = ({ onClose, setAction, action, row, callback }) => {
                 {action === 'update' ? 'Actualizar' : 'Registrar'}
             </Typography>
             {!data ? (
-                <StyledBox component="form"  onSubmit={handleSubmit}>
+                <StyledBox component="form" onSubmit={handleSubmit}>
                     <TextField
                         required
                         label="Nombre"
@@ -93,7 +93,7 @@ const FormularioClient = ({ onClose, setAction, action, row, callback }) => {
                     {loading && <p>Cargando...</p>}
                     {submissionError && <p style={{ color: 'red' }}>{submissionError}</p>}
                     <Button variant="contained" color="primary" type="submit" disabled={loading}>
-                        Enviar
+                        {action === "update" ? "Actulizar" : "Crear"}
                     </Button>
                 </StyledBox>
             ) : (

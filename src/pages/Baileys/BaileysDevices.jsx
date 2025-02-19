@@ -10,12 +10,12 @@ import Modal from "../../components/Tables/modal/Modal";
 import Delete from "../../components/Tables/Delete/Delete";
 import FormularioBalley from "../../components/Tables/formularioBileys/FormularioBileys.jsx";
 import LoopIcon from '@mui/icons-material/Loop';
-import { 
-  ContainerBox, 
-  StyledBox, 
-  StyledButtonBox, 
-  StyledDivider, 
-  NavbarContainer 
+import {
+  ContainerBox,
+  StyledBox,
+  StyledButtonBox,
+  StyledDivider,
+  NavbarContainer
 } from "../home/Home.styles.js";
 import NavBar from "../../components/NavBar/NavBar.jsx";
 
@@ -30,9 +30,9 @@ const ACTIONS = {
 const operaciones = new OperationBasic("baileysdevices");
 
 const MemoizedActionButton = React.memo(({ params, handleSetAction, handleSetSelect }) => (
-  <ActionButton 
-    action={handleSetAction} 
-    select={() => handleSetSelect(params.row)} 
+  <ActionButton
+    action={handleSetAction}
+    select={() => handleSetSelect(params.row)}
   />
 ));
 
@@ -51,14 +51,14 @@ const LoadingState = () => (
     <Typography>Loading...</Typography>
   </Box>
 );
-const ErrorState = ({ message}) => (
-  <Box p={2} display="flex"  alignContent={"center"} justifyContent={"center"} marginTop="30vh">
+const ErrorState = ({ message }) => (
+  <Box p={2} display="flex" alignContent={"center"} justifyContent={"center"} marginTop="30vh">
     <Box textAlign="center">
-          <Typography color="error">
-      Error loading data: {message|| ""}
+      <Typography color="error">
+        Error loading data: {message || ""}
 
-    </Typography>
-    <LoopIcon onClick={()=>window.location.reload()} color="error" sx={{fontSize:"80px",cursor:'pointer'}}/>
+      </Typography>
+      <LoopIcon onClick={() => window.location.reload()} color="error" sx={{ fontSize: "80px", cursor: 'pointer' }} />
     </Box>
 
   </Box>
@@ -76,17 +76,17 @@ const BaileysDevices = () => {
 
   const columns = [
     { field: "id", headerName: "Id", flex: 1, isDrop: true },
-    { 
-      field: "enabled", 
-      headerName: "Enabled", 
+    {
+      field: "enabled",
+      headerName: "Enabled",
       flex: 1,
       renderCell: (params) => (
         <StatusChip value={params.row.enabled} type="enabled" />
       )
     },
-    { 
-      field: "logged_status", 
-      headerName: "Logged Status", 
+    {
+      field: "logged_status",
+      headerName: "Logged Status",
       flex: 1,
       renderCell: (params) => (
         <StatusChip value={params.row.logged_status} type="status" />
@@ -98,7 +98,7 @@ const BaileysDevices = () => {
       headerName: "Actiones",
       flex: 1,
       renderCell: (params) => (
-        <MemoizedActionButton 
+        <MemoizedActionButton
           params={params}
           handleSetAction={handleSetAction}
           handleSetSelect={handleSetSelect}
@@ -121,22 +121,22 @@ const BaileysDevices = () => {
   }, [data]);
 
   // Effect for handling modal opening
- useEffect(() => {
-       if (action) {
-         if (action === ACTIONS.SUCCESS_DELETE || action === ACTIONS.RELOADED) {
-           operaciones.getTables(token)
-             .then(fetchedData => {
-               setItems(fetchedData);
-               setAction("");
-             })
-             .catch(error => {
-               console.error("Error fetching data:", error);
-             });
-         } else {
-           openModal();
-         }
-       }
-     }, [action, token, openModal]);
+  useEffect(() => {
+    if (action) {
+      if (action === ACTIONS.SUCCESS_DELETE || action === ACTIONS.RELOADED) {
+        operaciones.getTables(token)
+          .then(fetchedData => {
+            setItems(fetchedData);
+            setAction("");
+          })
+          .catch(error => {
+            console.error("Error fetching data:", error);
+          });
+      } else {
+        openModal();
+      }
+    }
+  }, [action, token, openModal]);
 
   const handleNewElement = useCallback(() => {
     setSelect({});
@@ -150,10 +150,11 @@ const BaileysDevices = () => {
     <ContainerBox>
       <StyledBox>
         <StyledButtonBox>
-          <StyledDivider />
-          <Button onClick={handleNewElement}>Nuevo Elemento</Button>
+          <Typography sx={{ flex: 1 }} variant="h1">Baileys</Typography>
+          <StyledDivider sx={{ flex: 9 }} />
+          <Button sx={{ flex: 1 }} onClick={handleNewElement}>Nuevo Baileys</Button>
         </StyledButtonBox>
-        
+
         {action && isOpen && (
           <Modal
             isOpen={isOpen}
@@ -165,7 +166,7 @@ const BaileysDevices = () => {
             Component={action === ACTIONS.DELETE ? Delete : FormularioBalley}
           />
         )}
-        
+
         {items && <GenericTable columns={columns} data={items} />}
       </StyledBox>
     </ContainerBox>

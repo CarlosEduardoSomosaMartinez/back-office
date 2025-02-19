@@ -9,11 +9,11 @@ import { useModal } from "../../hooks/useModal";
 import Modal from "../../components/Tables/modal/Modal";
 import Delete from "../../components/Tables/Delete/Delete";
 import LoopIcon from '@mui/icons-material/Loop';
-import { 
-  ContainerBox, 
-  StyledBox, 
-  StyledButtonBox, 
-  StyledDivider, 
+import {
+  ContainerBox,
+  StyledBox,
+  StyledButtonBox,
+  StyledDivider,
 } from "../home/Home.styles.js";
 import FormularioPeriodic from "../../components/Tables/formularioPeriodic/FormularioPeriodic.jsx";
 
@@ -28,9 +28,9 @@ const ACTIONS = {
 const operaciones = new OperationBasic("periodicjobs");
 
 const MemoizedActionButton = React.memo(({ params, handleSetAction, handleSetSelect }) => (
-  <ActionButton 
-    action={handleSetAction} 
-    select={() => handleSetSelect(params.row)} 
+  <ActionButton
+    action={handleSetAction}
+    select={() => handleSetSelect(params.row)}
   />
 ));
 
@@ -49,14 +49,14 @@ const LoadingState = () => (
     <Typography>Loading...</Typography>
   </Box>
 );
-const ErrorState = ({ message}) => (
-  <Box p={2} display="flex"  alignContent={"center"} justifyContent={"center"} marginTop="30vh">
+const ErrorState = ({ message }) => (
+  <Box p={2} display="flex" alignContent={"center"} justifyContent={"center"} marginTop="30vh">
     <Box textAlign="center">
-          <Typography color="error">
-      Error loading data: {message|| ""}
+      <Typography color="error">
+        Error loading data: {message || ""}
 
-    </Typography>
-    <LoopIcon onClick={()=>window.location.reload()} color="error" sx={{fontSize:"80px",cursor:'pointer'}}/>
+      </Typography>
+      <LoopIcon onClick={() => window.location.reload()} color="error" sx={{ fontSize: "80px", cursor: 'pointer' }} />
     </Box>
 
   </Box>
@@ -76,7 +76,12 @@ const PeriodicJobs = () => {
 
   const columns = [
     { field: "id", headerName: "Id", flex: 1 },
-    { field: "client_id", headerName: "Client Id", flex: 1 },
+    {
+      field: "client",
+      headerName: "Client",
+      flex: 1,
+      renderCell: (params) => `${params.row.client_name}(${params.row.client_id})`
+    },
     { field: "name", headerName: "Name", flex: 1 },
     { field: "schedule", headerName: "Schedule", flex: 1 },
     { field: "status", headerName: "Status", flex: 1 },
@@ -85,7 +90,7 @@ const PeriodicJobs = () => {
       headerName: "Actiones",
       flex: 1,
       renderCell: (params) => (
-        <MemoizedActionButton 
+        <MemoizedActionButton
           params={params}
           handleSetAction={handleSetAction}
           handleSetSelect={handleSetSelect}
@@ -108,22 +113,22 @@ const PeriodicJobs = () => {
   }, [data]);
 
   // Effect for handling modal opening
- useEffect(() => {
-       if (action) {
-         if (action === ACTIONS.SUCCESS_DELETE || action === ACTIONS.RELOADED) {
-           operaciones.getTables(token)
-             .then(fetchedData => {
-               setItems(fetchedData);
-               setAction("");
-             })
-             .catch(error => {
-               console.error("Error fetching data:", error);
-             });
-         } else {
-           openModal();
-         }
-       }
-     }, [action, token, openModal]);
+  useEffect(() => {
+    if (action) {
+      if (action === ACTIONS.SUCCESS_DELETE || action === ACTIONS.RELOADED) {
+        operaciones.getTables(token)
+          .then(fetchedData => {
+            setItems(fetchedData);
+            setAction("");
+          })
+          .catch(error => {
+            console.error("Error fetching data:", error);
+          });
+      } else {
+        openModal();
+      }
+    }
+  }, [action, token, openModal]);
 
   const handleNewElement = useCallback(() => {
     setSelect({});
@@ -137,10 +142,11 @@ const PeriodicJobs = () => {
     <ContainerBox>
       <StyledBox>
         <StyledButtonBox>
-          <StyledDivider />
-          <Button onClick={handleNewElement}>Nuevo Elemento</Button>
+          <Typography sx={{ flex: 1 }} variant="h1">PeriodicJobs</Typography>
+          <StyledDivider sx={{ flex: 9 }} />
+          <Button sx={{ flex: 1 }} onClick={handleNewElement}>Nuevo PeriodicJobs</Button>
         </StyledButtonBox>
-        
+
         {action && isOpen && (
           <Modal
             isOpen={isOpen}
@@ -152,7 +158,7 @@ const PeriodicJobs = () => {
             Component={action === ACTIONS.DELETE ? Delete : FormularioPeriodic}
           />
         )}
-        
+
         {items && <GenericTable columns={columns} data={items} />}
       </StyledBox>
     </ContainerBox>

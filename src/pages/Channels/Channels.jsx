@@ -10,12 +10,12 @@ import Modal from "../../components/Tables/modal/Modal";
 import FormularioChannels from "../../components/Tables/formularioChannels/FormularioChannels.jsx";
 import Delete from "../../components/Tables/Delete/Delete";
 import LoopIcon from '@mui/icons-material/Loop';
-import { 
-  ContainerBox, 
-  StyledBox, 
-  StyledButtonBox, 
-  StyledDivider, 
-  NavbarContainer 
+import {
+  ContainerBox,
+  StyledBox,
+  StyledButtonBox,
+  StyledDivider,
+  NavbarContainer
 } from "../home/Home.styles.js";
 import NavBar from "../../components/NavBar/NavBar.jsx";
 import TypeLabel from "../../components/typeLabel/TypeLabe.jsx";
@@ -31,9 +31,9 @@ const ACTIONS = {
 const operaciones = new OperationBasic("channelsM");
 
 const MemoizedActionButton = React.memo(({ params, handleSetAction, handleSetSelect }) => (
-  <ActionButton 
-    action={handleSetAction} 
-    select={() => handleSetSelect(params.row)} 
+  <ActionButton
+    action={handleSetAction}
+    select={() => handleSetSelect(params.row)}
   />
 ));
 
@@ -47,14 +47,14 @@ const LoadingState = () => (
   </Box>
 );
 
-const ErrorState = ({ message}) => (
-  <Box p={2} display="flex"  alignContent={"center"} justifyContent={"center"} marginTop="30vh">
+const ErrorState = ({ message }) => (
+  <Box p={2} display="flex" alignContent={"center"} justifyContent={"center"} marginTop="30vh">
     <Box textAlign="center">
-          <Typography color="error">
-      Error loading data: {message|| ""}
+      <Typography color="error">
+        Error loading data: {message || ""}
 
-    </Typography>
-    <LoopIcon onClick={()=>window.location.reload()} color="error" sx={{fontSize:"80px",cursor:'pointer'}}/>
+      </Typography>
+      <LoopIcon onClick={() => window.location.reload()} color="error" sx={{ fontSize: "80px", cursor: 'pointer' }} />
     </Box>
 
   </Box>
@@ -73,10 +73,15 @@ const Channels = () => {
 
   const columns = [
     { field: "id", headerName: "Id", flex: 1, isDrop: true },
-    { field: "client_id", headerName: "Client Id", flex: 1 },
-    { 
-      field: "type", 
-      headerName: "Type", 
+    {
+      field: "client",
+      headerName: "Client",
+      flex: 1,
+      renderCell: (params) => `${params.row.client_name}(${params.row.client_id})`
+    },
+    {
+      field: "type",
+      headerName: "Type",
       flex: 1,
       renderCell: (params) => (
         <MemoizedTypeLabel type={params.row.type} />
@@ -84,11 +89,17 @@ const Channels = () => {
     },
     { field: "assistant_id", headerName: "Assistant Id", flex: 1 },
     {
+      field: "assistant",
+      headerName: "Assistant",
+      flex: 1,
+      renderCell: (params) => `${params.row.name_assistants}(${params.row.assistant_id})`
+    },
+    {
       field: "actiones",
       headerName: "Actiones",
       flex: 1,
       renderCell: (params) => (
-        <MemoizedActionButton 
+        <MemoizedActionButton
           params={params}
           handleSetAction={handleSetAction}
           handleSetSelect={handleSetSelect}
@@ -110,31 +121,31 @@ const Channels = () => {
     }
   }, [data]);
 
- 
- 
+
+
 
   // Effect for handling deletion
-    useEffect(() => {
-      if (action) {
-        if (action === ACTIONS.SUCCESS_DELETE || action === ACTIONS.RELOADED) {
-          operaciones.getTables(token)
-            .then(fetchedData => {
-              setItems(fetchedData);
-              setAction("");
-            })
-            .catch(error => {
-              console.error("Error fetching data:", error);
-            });
-        } else {
-          openModal();
-        }
+  useEffect(() => {
+    if (action) {
+      if (action === ACTIONS.SUCCESS_DELETE || action === ACTIONS.RELOADED) {
+        operaciones.getTables(token)
+          .then(fetchedData => {
+            setItems(fetchedData);
+            setAction("");
+          })
+          .catch(error => {
+            console.error("Error fetching data:", error);
+          });
+      } else {
+        openModal();
       }
-    }, [action, token, openModal]);
-  
-    const handleNewElement = useCallback(() => {
-      setSelect({});
-      setAction(ACTIONS.CREATE);
-    }, []);
+    }
+  }, [action, token, openModal]);
+
+  const handleNewElement = useCallback(() => {
+    setSelect({});
+    setAction(ACTIONS.CREATE);
+  }, []);
 
   if (loading) return <LoadingState />;
   if (error) return <ErrorState message={error.message} />;
@@ -143,10 +154,11 @@ const Channels = () => {
     <ContainerBox>
       <StyledBox>
         <StyledButtonBox>
-          <StyledDivider />
-          <Button onClick={handleNewElement}>Nuevo Elemento</Button>
+          <Typography sx={{ flex: 1 }} variant="h1">Channels</Typography>
+          <StyledDivider sx={{ flex: 9 }} />
+          <Button sx={{ flex: 1 }} onClick={handleNewElement}>Nuevo Channels</Button>
         </StyledButtonBox>
-        
+
         {action && isOpen && (
           <Modal
             isOpen={isOpen}
@@ -158,7 +170,7 @@ const Channels = () => {
             Component={action === ACTIONS.DELETE ? Delete : FormularioChannels}
           />
         )}
-        
+
         {items && <GenericTable columns={columns} data={items} />}
       </StyledBox>
     </ContainerBox>

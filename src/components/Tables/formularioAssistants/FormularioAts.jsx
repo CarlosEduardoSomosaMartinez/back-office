@@ -13,23 +13,23 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
   const [confirmForm, setConfirmForm] = useState(false);
   const [response, setResponse] = useState(row || {});
   const token = useSelector((state) => state.auth.token);
-  const [submissionError,setSubmissionError] = useState(null)
+  const [submissionError, setSubmissionError] = useState(null)
 
-   const { data, loading, error } = useFetch(
-          confirmForm ? callback : () => Promise.resolve(null),
-          action === "update"
-              ? [{ name: response.name, config: response.config, last_updated: response.last_updated,oai_assistant_id:response.oai_assistant_id }, token, response.id]
-              : [response, token]
-      );
-  
-      
-      useEffect(() => {
-          if (error) {
-              setConfirmForm(false);  
-              setSubmissionError("Error al registrar elemento. Intenta de nuevo.");
-          }
-      }, [error]);
-  
+  const { data, loading, error } = useFetch(
+    confirmForm ? callback : () => Promise.resolve(null),
+    action === "update"
+      ? [{ name: response.name, config: response.config, last_updated: response.last_updated, oai_assistant_id: response.oai_assistant_id }, token, response.id]
+      : [response, token]
+  );
+
+
+  useEffect(() => {
+    if (error) {
+      setConfirmForm(false);
+      setSubmissionError("Error al registrar elemento. Intenta de nuevo.");
+    }
+  }, [error]);
+
 
   useEffect(() => {
     if (row) {
@@ -39,8 +39,8 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-     const date = new Date()
-    response.last_updated=date.toDateString();
+    const date = new Date()
+    response.last_updated = date.toDateString();
     setConfirmForm(true);
   };
 
@@ -49,7 +49,7 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
     setResponse((prev) => ({ ...prev, [name]: value }));
   };
 
-    
+
   const handleDrop = (name, value) => {
     setResponse((prev) => ({ ...prev, [name]: value }));
   };
@@ -61,11 +61,11 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
 
   const handleJson = (value) => {
     setResponse((prev) => ({ ...prev, config: value }));
-};
- 
+  };
+
   const renderForm = () => (
     <StyledBox component="form" onSubmit={handleSubmit}>
-        {action==="create"&&<DropDown
+      {action === "create" && <DropDown
         token={token}
         label="Client ID"
         value={response.client_id}
@@ -81,24 +81,24 @@ const FormularioUser = ({ onClose, setAction, action, row, callback }) => {
         fullWidth
       />
 
-     <TextField
-          required
-          label="Aoi Assistant Id"
-          name="oai_assistant_id"
-          value={response.oai_assistant_id|| ""}
-          onChange={handleChange}
-          fullWidth
-        />
-             <CodeEditor
+      <TextField
+        required
+        label="Aoi Assistant Id"
+        name="oai_assistant_id"
+        value={response.oai_assistant_id || ""}
+        onChange={handleChange}
+        fullWidth
+      />
+      <CodeEditor
         data={response.config}
         label="Config"
         change={handleJson}
       />
-       
+
       {loading && <Typography>Cargando...</Typography>}
       {error && <Typography color="error">{submissionError}</Typography>}
       <Button variant="contained" color="primary" type="submit">
-        Enviar
+        {action === "update" ? "Actulizar" : "Crear"}
       </Button>
     </StyledBox>
   );
